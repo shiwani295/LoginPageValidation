@@ -19,7 +19,6 @@ const emailReduer = (state, action) => {
 //2nd step
 const passwordReducer = (state, action) => {
   if (action.type === "USER_PASSINPUT") {
-    console.log(action);
     return { value: action.val, isValid: action.val.trim().length > 6 };
   }
   if (action.type === "PASS_BLUR") {
@@ -31,7 +30,6 @@ const passwordReducer = (state, action) => {
 //collage reducer
 const collageReducer = (state, action) => {
   if (action.type === "USER_COLLAGEINPUT") {
-    console.log(action);
     return { value: action.val, isValid: action.val.trim().length > 0 };
   }
 
@@ -44,6 +42,7 @@ const collageReducer = (state, action) => {
 const Login = (props) => {
   const [formIsValid, setFormIsValid] = useState(false);
 
+  ///////////////////////////cleanUP end //////////////////////////
   //emailUseReducer
   const [emailState, dispatchEmail] = useReducer(emailReduer, {
     value: "",
