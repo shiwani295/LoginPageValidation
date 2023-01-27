@@ -1,7 +1,9 @@
-import React, { userState, useReducer, useState } from "react";
+import React, { userState, useReducer, useState, useContext } from "react";
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
+import AuthContext from "../../store/auth-context";
+import Input from "../UI/Input/Input";
 
 const emailReduer = (state, action) => {
   //state is last snapshot //action comes from the email password handler type and value
@@ -41,6 +43,7 @@ const collageReducer = (state, action) => {
 
 const Login = (props) => {
   const [formIsValid, setFormIsValid] = useState(false);
+  const authCxt = useContext(AuthContext);
 
   ///////////////////////////cleanUP end //////////////////////////
   //emailUseReducer
@@ -60,6 +63,9 @@ const Login = (props) => {
     value: "",
     isValid: false,
   });
+
+  // const { isValid: emailIsValid } = emailState;
+  // const { isValid: setPasswordIsValid } = passwordState;
 
   /////Email HANDLAR
   const emailChangeHandler = (event) => {
@@ -101,11 +107,10 @@ const Login = (props) => {
   };
 
   const validatePasswordHandler = () => {
+    //setPasswordIsValid(enteredPassword.trim().length > 6);
     dispatchPassword({
       type: "PASS_BLUR",
     });
-
-    //setPasswordIsValid(enteredPassword.trim().length > 6);
   };
 
   const validateCollageHandler = () => {
@@ -118,53 +123,43 @@ const Login = (props) => {
   //////////Submit Handlar
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(emailState.value, passwordState.value, collageState.value);
+    console.log(collageState.value);
+    console.log(emailState.value);
+    console.log(passwordState.value);
+    authCxt.onLogin(emailState.value, passwordState.value, collageState.value);
   };
 
   return (
     <Card className={classes.login}>
       <form onSubmit={submitHandler}>
-        <div
-          className={`${classes.control} 
-        ${emailState.isValid === false ? classes.invalid : ""}`}
-        >
-          <label htmlFor="email">E-Mail</label>
-          <input
-            type="email"
-            id="email"
-            value={emailState.value}
-            onChange={emailChangeHandler}
-            onBlur={validateEmailHandler}
-          />
-        </div>
-        <div
-          className={`${classes.control} ${
-            passwordState.isValid === false ? classes.invalid : ""
-          }`}
-        >
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={passwordState.value}
-            onChange={passwordChangeHandler}
-            onBlur={validatePasswordHandler}
-          />
-        </div>
-        <div
-          className={`${classes.control} ${
-            collageState.isValid === false ? classes.invalid : ""
-          }`}
-        >
-          <label htmlFor="clg">Collage</label>
-          <input
-            type="text"
-            id="clg"
-            value={collageState.value}
-            onChange={collageChangeHandler}
-            onBlur={validateCollageHandler}
-          />
-        </div>
+        <Input
+          id="email"
+          label="E-Mail"
+          type="email"
+          isValid={emailState.isValid}
+          value={emailState.value}
+          onChange={emailChangeHandler}
+          onBlur={validateEmailHandler}
+        />
+        <Input
+          id="password"
+          label="Password"
+          type="password"
+          isValid={passwordState.isValid}
+          value={passwordState.value}
+          onChange={passwordChangeHandler}
+          onBlur={validatePasswordHandler}
+        />
+        <Input
+          id="clg"
+          label="Collage"
+          type="text"
+          isValid={collageState.isValid}
+          value={collageState.value}
+          onChange={collageChangeHandler}
+          onBlur={validateCollageHandler}
+        />
+        {/*  */}
         <div className={classes.actions}>
           <Button type="submit" className={classes.btn} disabled={!formIsValid}>
             Login
